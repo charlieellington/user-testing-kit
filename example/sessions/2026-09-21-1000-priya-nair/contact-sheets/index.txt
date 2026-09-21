@@ -1,0 +1,14 @@
+# 2026-09-21-1000-priya-nair — one frame every 10s, 6 across x 5 down, read left-to-right then top-to-bottom
+# recording: recording.mp4  duration: 112.400000s  frames: 12
+sheet-01  row 1 col 1  0:00
+sheet-01  row 1 col 2  0:10
+sheet-01  row 1 col 3  0:20
+sheet-01  row 1 col 4  0:30
+sheet-01  row 1 col 5  0:40
+sheet-01  row 1 col 6  0:50
+sheet-01  row 2 col 1  1:00
+sheet-01  row 2 col 2  1:10
+sheet-01  row 2 col 3  1:20
+sheet-01  row 2 col 4  1:30
+sheet-01  row 2 col 5  1:40
+sheet-01  row 2 col 6  1:50

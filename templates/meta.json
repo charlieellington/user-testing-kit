@@ -1,0 +1,10 @@
+{
+  "participant": "Firstname Lastname",
+  "initial": "F",
+  "role": "what they do, in a few words",
+  "date": "YYYY-MM-DD",
+  "transcript": "transcript.txt",
+  "recording": "recording.mp4",
+  "offset_seconds": 0,
+  "offset_note": "recording time = transcript time + offset_seconds. Measured at: <the moment you used — what was said, transcript time, recording time>."
+}

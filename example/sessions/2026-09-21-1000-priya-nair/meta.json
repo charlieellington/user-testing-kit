@@ -1,0 +1,10 @@
+{
+  "participant": "Priya Nair",
+  "initial": "P",
+  "role": "account manager (fictional, staged session)",
+  "date": "2026-09-21",
+  "transcript": "transcript.txt",
+  "recording": "recording.mp4",
+  "offset_seconds": -15,
+  "offset_note": "recording time = transcript time + offset_seconds. Measured at: Priya says 'I'll try Backlog' at transcript 0:31–0:33; the Backlog page appears on the recording at 0:18 → offset −15."
+}

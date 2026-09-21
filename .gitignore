@@ -1,0 +1,10 @@
+# Real research never leaves the machine: recordings and transcripts of real people stay out of git.
+sessions/*/recording.*
+sessions/*/*.mp4
+sessions/*/*.webm
+sessions/*/transcript.*
+# The staged example IS committed (example/sessions/...): fictional interface, scripted participant.
+example/interface/node_modules/
+example/interface/.video/
+node_modules/
+.DS_Store

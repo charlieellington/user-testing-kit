@@ -1,0 +1,1 @@
+Your sessions go here, one folder each: `YYYY-MM-DD-HHMM-firstname-lastname/` with `transcript.txt`, `recording.mp4` and `meta.json` (copy `templates/meta.json`). Recordings are git-ignored. Keep transcripts of real people out of any public copy.

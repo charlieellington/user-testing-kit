@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Practice Desk (demo)</title>
+<!-- A fictional practice-management screen used to stage the example session. Nothing here is a real
+     product, client or person. It deliberately carries six small usability problems (a vague nav label,
+     an unlabelled fraction, an unexplained chip, a button with no confirmation, a default date in the
+     past, a field with no label) so the example findings have something real to find. -->
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; color: #1f2937; background: #f5f6f8; }
+  .app { display: grid; grid-template-columns: 220px 1fr; height: 100vh; }
+  nav { background: #111827; color: #e5e7eb; padding: 20px 14px; }
+  nav .brand { font-weight: 700; margin: 0 8px 24px; color: #fff; }
+  nav a { display: block; padding: 10px 12px; border-radius: 6px; color: #cbd5e1; text-decoration: none; margin-bottom: 4px; }
+  nav a.active { background: #374151; color: #fff; }
+  main { padding: 32px 40px; overflow: auto; }
+  h1 { font-size: 22px; margin: 0 0 20px; }
+  .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+  .chips { display: flex; gap: 8px; }
+  .chip { font-size: 12px; padding: 3px 8px; border-radius: 999px; background: #eef2ff; color: #3730a3; }
+  .chip.amber { background: #fef3c7; color: #92400e; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid #e5e7eb; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #f3f4f6; font-size: 14px; }
+  .check { list-style: none; padding: 0; margin: 0 0 24px; max-width: 420px; }
+  .check li { padding: 8px 0; border-bottom: 1px solid #eee; font-size: 15px; }
+  .check li.done::before { content: "✓ "; color: #059669; }
+  .check li.todo::before { content: "○ "; color: #9ca3af; }
+  label { display: block; font-size: 13px; color: #6b7280; margin: 14px 0 4px; min-height: 16px; }
+  input { font-size: 15px; padding: 8px 10px; border: 1px solid #d1d5db; border-radius: 6px; width: 260px; }
+  button { margin-top: 20px; font-size: 15px; padding: 10px 18px; border-radius: 6px; border: 0; background: #2563eb; color: #fff; cursor: pointer; }
+  button[disabled] { background: #9ca3af; cursor: default; }
+  .muted { color: #6b7280; font-size: 13px; }
+  #cursor { position: fixed; left: 0; top: 0; width: 18px; height: 26px; pointer-events: none; z-index: 99; transition: transform .45s ease; }
+</style>
+</head>
+<body>
+<div class="app">
+  <nav>
+    <div class="brand">Practice Desk</div>
+    <a href="#" data-view="clients" id="nav-clients">Clients</a>
+    <a href="#" data-view="backlog" id="nav-backlog">Backlog</a>
+    <a href="#" data-view="jobs" id="nav-jobs">Jobs</a>
+    <a href="#" data-view="settings" id="nav-settings">Settings</a>
+  </nav>
+  <main id="main"></main>
+</div>
+<svg id="cursor" viewBox="0 0 18 26"><path d="M1 1 L1 19 L6 14 L9 23 L12 22 L9 13 L16 13 Z" fill="#111" stroke="#fff" stroke-width="1.2"/></svg>
+<script>
+const views = {
+  clients: () => `<h1>Clients</h1><table><tr><th>Client</th><th>Type</th><th>Manager</th><th>Status</th></tr>
+    <tr><td>Harbour Books Ltd</td><td>Company</td><td>Priya</td><td>Active</td></tr>
+    <tr><td>Morgan Reed Design</td><td>Sole trader</td><td>Priya</td><td>Active</td></tr>
+    <tr><td>Cedar Kitchen Ltd</td><td>Company</td><td>Sam</td><td>Active</td></tr>
+    <tr><td>Meadow Lane Consulting Ltd</td><td>Company</td><td>Sam</td><td>Active</td></tr>
+    <tr><td>Willow &amp; Finch Studio Ltd</td><td>Company</td><td>Priya</td><td>Onboarding</td></tr></table>`,
+  backlog: () => `<h1>Backlog</h1>
+    <div class="card" id="card-wf"><div><strong>Willow &amp; Finch Studio Ltd</strong><div class="muted">Accounts &amp; tax · new client</div></div>
+      <div class="chips"><span class="chip" id="chip-fraction">2/4</span><span class="chip amber" id="chip-ack">1 to acknowledge</span></div></div>
+    <div class="card"><div><strong>Morgan Reed Design</strong><div class="muted">Self-assessment · new client</div></div><div class="chips"><span class="chip">0/4</span></div></div>
+    <div class="card"><div><strong>Harbour Books Ltd</strong><div class="muted">Accounts &amp; tax · existing client</div></div><div class="chips"><span class="chip">4/4</span></div></div>`,
+  jobs: () => `<h1>Jobs</h1><p class="muted">No jobs started yet.</p>`,
+  settings: () => `<h1>Settings</h1><p class="muted">Demo.</p>`,
+  client: () => `<h1>Willow &amp; Finch Studio Ltd</h1>
+    <p class="muted">Company · Jamie Taylor, Avery Taylor · <span class="chip amber" id="chip-ack-detail">1 to acknowledge</span></p>
+    <ul class="check">
+      <li class="done">ID check</li>
+      <li class="done">Engagement letter</li>
+      <li class="todo">Bank details</li>
+      <li class="todo">Previous accountant</li>
+    </ul>
+    <label>Target date</label><input id="target" value="01 Sep 2026">
+    <label></label><input id="deadline" value="31 Mar 2027">
+    <div><button id="start">Start job</button></div>`
+}
+function go(v) {
+  document.getElementById('main').innerHTML = views[v]()
+  document.querySelectorAll('nav a').forEach(a => a.classList.toggle('active', a.dataset.view === v))
+  const card = document.getElementById('card-wf'); if (card) card.onclick = () => go('client')
+  const start = document.getElementById('start')
+  if (start) start.onclick = () => { setTimeout(() => { start.disabled = true }, 3000) } // no confirmation; greys out 3 s later
+}
+document.querySelectorAll('nav a').forEach(a => a.onclick = e => { e.preventDefault(); go(a.dataset.view) })
+go('clients')
+// A drawn cursor, because headless recordings have none. record.mjs moves it.
+const cur = document.getElementById('cursor')
+window.demo = {
+  go,
+  cursor(x, y) { cur.style.transform = `translate(${x}px, ${y}px)` },
+  click(sel) { const el = document.querySelector(sel); if (el) el.click() },
+  focus(sel) { const el = document.querySelector(sel); if (el) el.focus() },
+  rect(sel) { const r = document.querySelector(sel)?.getBoundingClientRect(); return r ? { x: r.x, y: r.y, w: r.width, h: r.height } : null }
+}
+window.demo.cursor(520, 330)
+</script>
+</body>
+</html>
